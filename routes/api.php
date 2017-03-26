@@ -14,5 +14,5 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['middleware' => ['api']], function () {
-    Route::get('/tanklevel', 'Tank\WaterlevelController@getTankWaterLevel');
+    Route::post('/tanklevel', 'Tank\WaterlevelController@getTankWaterLevel');
 });
