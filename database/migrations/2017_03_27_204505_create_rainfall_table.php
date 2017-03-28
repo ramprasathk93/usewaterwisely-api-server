@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLocationsTable extends Migration
+class CreateRainfallTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateLocationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stations', function ($table) {
-            $table->integer('station_id')->unique()->unsigned();
-            $table->string('station_name');
+        Schema::create('rainfall', function ($table) {
+            $table->integer('station_number')->unsigned();
+            $table->string('month');
+            $table->integer('rainfall_amount');
+
+            $table->foreign('station_number')->references('station_id')->on('stations');
         });
     }
 
@@ -26,7 +29,6 @@ class CreateLocationsTable extends Migration
      */
     public function down()
     {
-        //
-        Schema::drop('stations');
+        Schema::drop('rainfall');
     }
 }
