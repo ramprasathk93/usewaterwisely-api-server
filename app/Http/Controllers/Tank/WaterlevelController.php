@@ -65,12 +65,13 @@ class WaterlevelController extends Controller
         $result = array();
         foreach ($months as $id => $key) {
             $result[$key] = array(
+                'month' => $months[$id],
                 'rainfall'  => $rainfall[$id],
                 'runoff' => $runoff[$id]
             );
         }
 
-        return view('api.success', ["data" => ["months" => $result]]);
+        return view('api.success', ["data" => $result]);
 
 
     }

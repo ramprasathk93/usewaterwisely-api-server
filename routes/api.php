@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
+header('Access-Control-Allow-Origin: ' . env('CLIENT_URLS'));
 
+header('Access-Control-Allow-Credentials: true');
 /*
 |--------------------------------------------------------------------------
 | API Routes
