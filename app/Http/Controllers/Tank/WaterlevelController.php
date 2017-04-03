@@ -11,7 +11,6 @@ use App\Exceptions\InvalidRequestException;
 
 class WaterlevelController extends Controller
 {
-    //
     public function getLocations(Request $request)
     {
         $bodyContent = json_decode($request->getContent());
@@ -72,7 +71,5 @@ class WaterlevelController extends Controller
         }
 
         return view('api.success', ["data" => $result]);
-
-
     }
 }
