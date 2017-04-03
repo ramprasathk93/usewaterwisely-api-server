@@ -14,7 +14,8 @@ class Forecast extends Model
     {
         try{
             $query = Forecast::where('station_name', 'LIKE', '%' . $location . '%');
-            return $query->get();
+            return $query->limit(3)
+                         ->get();
         } catch (ModelNotFoundException $e) {
             return null;
         }
