@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tank;
 
 use App\Models\Forecast;
+use App\Models\Location;
 use App\Models\Rainfall;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -11,20 +12,30 @@ use App\Exceptions\InvalidRequestException;
 
 class WaterlevelController extends Controller
 {
-    public function getLocations(Request $request)
+    public function getLocationSuggestions(Request $request)
     {
         $bodyContent = json_decode($request->getContent());
 
         $validator = Validator::make((array)$bodyContent, [
-            'location' => 'required'
+            'code' => 'sometimes|required|max:4|min:2',
+            'location' => 'sometimes|required'
         ]);
 
         if ($validator->fails()) {
             throw new InvalidRequestException($validator);
         }
 
-        $suburbs = Forecast::getStationNames($bodyContent->location);
-        return view('api.success', ["data" => ["locations" => $suburbs]]);
+        if (isset($bodyContent->location)){
+            $suburbs = Location::getSuburb($bodyContent->location);
+            return view('api.success', ["data" => ["locations" => $suburbs->pluck('suburb_code','suburb_name')]]);
+        }
+
+        if (isset($bodyContent->code)){
+            $suburbs = Location::getSuburbByCode($bodyContent->code);
+            return view('api.success', ["data" => ["locations" => $suburbs->pluck('suburb_code','suburb_name')]]);
+
+
+        }
     }
 
     public function getForecastForLocation(Request $request)

@@ -17,7 +17,7 @@ header('Access-Control-Allow-Credentials: true');
 
 Route::group(['middleware' => ['api']], function () {
 
-    Route::post('/searchlocation', 'Tank\WaterlevelController@getLocations');
+    Route::post('/searchlocation', 'Tank\WaterlevelController@getLocationSuggestions');
 
     Route::post('/getrunoffamount', 'Tank\WaterlevelController@getTankWaterLevelForLocation');
 
