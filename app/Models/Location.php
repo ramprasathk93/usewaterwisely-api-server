@@ -32,6 +32,17 @@ class Location extends Model
         }
     }
 
+    public static function getStationNumber($code, $suburb)
+    {
+        try{
+            $query = Location::where('suburb_code', $code);
+            return $query->where('suburb_name', $suburb)
+                         ->get();
+        } catch (ModelNotFoundException $e){
+            return null;
+        }
+    }
+
     public function stations()
     {
         return $this->belongsToMany('App\Models\Rainfall', 'rainfall');

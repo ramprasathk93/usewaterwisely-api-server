@@ -19,7 +19,9 @@ Route::group(['middleware' => ['api']], function () {
 
     Route::post('/searchlocation', 'Tank\WaterlevelController@getLocationSuggestions');
 
-    Route::post('/getrunoffamount', 'Tank\WaterlevelController@getTankWaterLevelForLocation');
+    Route::post('/gettanksize', 'Tank\WaterlevelController@getTankWaterSizeForLocation');
+
+    Route::post('/getwaterlevels','Tank\WaterlevelController@getTankWaterLevelForLocation');
 
 
 });
