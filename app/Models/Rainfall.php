@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -20,32 +21,45 @@ class Rainfall extends Model
 
     public static function calculateTankSize($rainfall, $roofArea, $household)
     {
-
-        //$runoff = array();
-        $waterLevels = array();
-        $demand = $household * 160 * 30;
+        //$waterLevels = array();
+        $demand = $household * 140 * 30;
         $volume = 0;
-        for($size = 500; $size <= 10000; $size += 500){
-            foreach ($rainfall as $amount){
+        $size = 500;
+        $status = false;
+        while($size < 50000 and $status != true) {
+            $waterLevels = array();
+            foreach ($rainfall as $amount) {
                 $runoffAmount = 0.80 * ($amount - 2) * $roofArea;
                 $volume = $volume + ($runoffAmount - $demand);
-                $overflow = $volume - $size;
-                if ($overflow < 0)
-                    break 1;
-                else
-                    array_push($waterLevels, $volume);
+                if ($volume > $size) {
+                    $overflow = $volume - $size;
+                    $deficit = 0;
+                    $volume = $volume - $overflow;
+                } elseif ($volume < 0) {
+                    $deficit = abs($volume);
+                    $overflow = 0;
+                    $volume = 0;
+                } else {
+                    $overflow = 0;
+                    $deficit = 0;
                 }
-            if (sizeof($waterLevels) == 12)
-                break;
+                array_push($waterLevels, array(
+                    "volume" => $volume,
+                    "overflow" => $overflow,
+                    "deficit" => $deficit
+                ));
             }
+            $status = Rainfall::checkTankStatus($waterLevels);
+            $size = $size + 500;
+        }
         return $size;
     }
 
     public static function getWaterLevels($params)
     {
         $rainfall = $params["rainfall"];
-        //dd($rainfall);
-        //exit;
+        //$currentTime = Carbon::now();
+        //$currentMonth = $currentTime->month;
         $volume = 0;
         $demand = $params["household_number"] * 140 * 30;
         $tankSize = $params["tank_capacity"];
@@ -77,5 +91,20 @@ class Rainfall extends Model
             ));
         }
         return $waterLevels;
+    }
+
+    public static function checkTankStatus($waterLevels)
+    {
+        $count = 0;
+        foreach ($waterLevels  as $value){
+            if ($value['overflow'] == 0 && $value['deficit'] == 0){
+                $count = $count + 1;
+            }
+        }
+        if ($count == 12){
+            return true;
+        }
+        else
+            return false;
     }
 }

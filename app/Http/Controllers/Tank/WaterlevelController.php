@@ -73,9 +73,7 @@ class WaterlevelController extends Controller
         $nearbyStation = Location::getStationNumber($bodyContent->code, $bodyContent->suburb);
         $rainfallAmount = Rainfall::getRainfallAmountForLocation($nearbyStation->pluck('station_number'));
         $rainfall = array_values($rainfallAmount->pluck('rainfall_amount')->toArray());
-        //$months = array_values($rainfallAmount->pluck('month')->toArray());
         $tankSize = Rainfall::calculateTankSize($rainfall, $bodyContent->roof_area, $bodyContent->household_number);
-        //$result = array();
         /*foreach ($months as $id => $key) {
             $result[$key] = array(
                 'month' => $months[$id],
@@ -84,7 +82,7 @@ class WaterlevelController extends Controller
             );
         }*/
 
-        return view('api.success', ["data" => ["message" => $tankSize]]);
+        return view('api.success', ["data" => ["tank_size" => $tankSize]]);
     }
 
     public function getTankWaterLevelForLocation(Request $request)
