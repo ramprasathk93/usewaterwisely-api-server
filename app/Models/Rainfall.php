@@ -23,11 +23,11 @@ class Rainfall extends Model
     {
         //$waterLevels = array();
         $demand = $household * 140 * 30;
-        $volume = 0;
         $size = 500;
         $status = false;
         while($size < 50000 and $status != true) {
             $waterLevels = array();
+            $volume = 0;
             foreach ($rainfall as $amount) {
                 $runoffAmount = 0.80 * ($amount - 2) * $roofArea;
                 $volume = $volume + ($runoffAmount - $demand);
@@ -52,7 +52,7 @@ class Rainfall extends Model
             $status = Rainfall::checkTankStatus($waterLevels);
             $size = $size + 500;
         }
-        return $size;
+        return $size-500;
     }
 
     public static function getWaterLevels($params)
