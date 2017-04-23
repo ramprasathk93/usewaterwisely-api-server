@@ -13,6 +13,12 @@ use Illuminate\Validation\Validator;
 
 class InvalidRequestException extends AppException
 {
+    /**
+     * Exception raiser for the API
+     *
+     * InvalidRequestException constructor.
+     * @param Validator $validator
+     */
     public function __construct(Validator $validator)
     {
         $this->message = implode(', ', $validator->errors()->all());

@@ -12,6 +12,13 @@ use App\Exceptions\InvalidRequestException;
 
 class WaterlevelController extends Controller
 {
+    /**
+     * Function to return suburb name suggestions
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws InvalidRequestException
+     */
     public function getLocationSuggestions(Request $request)
     {
         $bodyContent = json_decode($request->getContent());
@@ -38,6 +45,13 @@ class WaterlevelController extends Controller
         }
     }
 
+    /**
+     * Function to get forecast for a location
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws InvalidRequestException
+     */
     public function getForecastForLocation(Request $request)
     {
         $bodyContent = json_decode($request->getContent());
@@ -55,6 +69,13 @@ class WaterlevelController extends Controller
         return view('api.success', ["data" => ["forecast" => json_decode($forecast)]]);
     }
 
+    /**
+     * Function to calculate the best tank size for the location
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws InvalidRequestException
+     */
     public function getTankWaterSizeForLocation(Request $request)
     {
         $bodyContent = json_decode($request->getContent());
@@ -74,17 +95,18 @@ class WaterlevelController extends Controller
         $rainfallAmount = Rainfall::getRainfallAmountForLocation($nearbyStation->pluck('station_number'));
         $rainfall = array_values($rainfallAmount->pluck('rainfall_amount')->toArray());
         $tankSize = Rainfall::calculateTankSize($rainfall, $bodyContent->roof_area, $bodyContent->household_number);
-        /*foreach ($months as $id => $key) {
-            $result[$key] = array(
-                'month' => $months[$id],
-                'rainfall'  => $rainfall[$id],
-                'runoff' => $runoff[$id]
-            );
-        }*/
+
 
         return view('api.success', ["data" => ["tank_size" => $tankSize]]);
     }
 
+    /**
+     * Function to calculate the water levels in the tank for an entire year
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws InvalidRequestException
+     */
     public function getTankWaterLevelForLocation(Request $request)
     {
         $bodyContent = json_decode($request->getContent());

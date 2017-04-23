@@ -7,9 +7,15 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Location extends Model
 {
-    //
+    // table name
     protected $table = 'suburbs';
 
+    /**
+     * Eloquent query to get matching suburb names
+     *
+     * @param string $suburb
+     * @return Location
+     */
     public static function getSuburb($suburb)
     {
         try{
@@ -21,6 +27,12 @@ class Location extends Model
         }
     }
 
+    /**
+     * Eloquent query to get suburb by post code
+     *
+     * @param string $code
+     * @return Location
+     */
     public static function getSuburbByCode($code)
     {
         try{
@@ -32,6 +44,13 @@ class Location extends Model
         }
     }
 
+    /**
+     * Eloquent model to get nearby station for suburb
+     *
+     * @param string $code
+     * @param string $suburb
+     * @return Location
+     */
     public static function getStationNumber($code, $suburb)
     {
         try{
@@ -43,6 +62,11 @@ class Location extends Model
         }
     }
 
+    /**
+     * A stationcan have many suburbs
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function stations()
     {
         return $this->belongsToMany('App\Models\Rainfall', 'rainfall');
