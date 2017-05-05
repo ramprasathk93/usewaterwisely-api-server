@@ -89,36 +89,14 @@ class Rainfall extends Model
     public static function getWaterLevels($params)
     {
         $rainfall = $params["rainfall"];
-        //$currentTime = Carbon::now();
-        //$currentMonth = $currentTime->month;
-        $volume = 0;
         $demand = $params["household_number"] * 140 * 30;
-        $tankSize = $params["tank_capacity"];
+        //$tankSize = $params["tank_capacity"];
         $waterLevels = array();
         foreach ($rainfall as $amount){
             $runoffAmount = 0.80 * ($amount - 2) * $params["roof_area"];
-            $volume = $volume + ($runoffAmount - $demand);
-            if ($volume > $tankSize)
-            {
-                $overflow = $volume - $tankSize;
-                $deficit = 0;
-                $volume = $volume - $overflow;
-            }
-            elseif ($volume < 0)
-            {
-                $deficit = abs($volume);
-                $overflow = 0;
-                $volume = 0;
-            }
-            else
-            {
-                $overflow = 0;
-                $deficit = 0;
-            }
             array_push($waterLevels, array(
-                "volume" => $volume,
-                "overflow" => $overflow,
-                "deficit" => $deficit
+                "volume" => $runoffAmount,
+                "demand" => $demand
             ));
         }
         return $waterLevels;

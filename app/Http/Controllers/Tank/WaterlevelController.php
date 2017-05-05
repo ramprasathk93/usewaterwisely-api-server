@@ -135,6 +135,9 @@ class WaterlevelController extends Controller
         ];
 
         $waterLevels = Rainfall::getWaterLevels($params);
+        foreach ($waterLevels as $id => $key) {
+           $waterLevels[$id]['rainfall'] = $rainfall[$id];
+        }
         return view('api.success', ["data" => $waterLevels]);
     }
 }
